@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.heaven.dto.ProjectBean">
+	<!-- table 속성(컬럼)과 property과의 맵핑 -->
+	<resultMap type="com.heaven.dto.ProjectBean" id="ProjectMap">
+		<!-- column:table 이름 / property:dto getter,setter메서드 -->
+		<result column="PROJECT_NUM" property="PROJECT_NUM"/>
+		<result column="PROJECT_TITLE" property="PROJECT_TITLE"/>
+		<result column="PROJECT_TEAMNAME" property="PROJECT_TEAMNAME"/>
+		<result column="USER_EMAIL" property="USER_EMAIL"/>
+		<result column="PROJECT_IMG" property="PROJECT_IMG"/>
+		<result column="PROJECT_BRIEFING" property="PROJECT_BRIEFING"/>
+		<result column="PROJECT_CONTENT" property="PROJECT_CONTENT"/>
+		<result column="PROJECT_GMONEY" property="PROJECT_GMONEY"/>
+		<result column="PROJECT_CMONEY" property="PROJECT_CMONEY"/>
+		<result column="PROJECT_SUPPORTERS" property="PROJECT_SUPPORTERS"/>
+		<result column="PROJECT_REPLY" property="PROJECT_REPLY"/>
+		<result column="PROJECT_D_DAY" property="PROJECT_D_DAY"/>
+		<result column="PROJECT_STATE" property="PROJECT_STATE"/>
+		<result column="PROJECT_DATE" property="PROJECT_DATE"/>
+	</resultMap>
+
+	<select id="selectProjectAll" resultMap="ProjectMap" resultType="ProjectBean">
+		select * from project
+	</select>
+	
+	<select id="getListCount" parameterType="String" resultType="Integer">
+		select count(*) as tot from PROJECT where USER_EMAIL= #{user_email,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectMyProject" resultMap="ProjectMap" resultType="ProjectBean" parameterType="hashMap">
+	<![CDATA[
+		select * from (select PROJECT_TITLE, PROJECT_IMG, PROJECT_GMONEY, 
+			PROJECT_CMONEY, USER_EMAIL, PROJECT_D_DAY, PROJECT_DATE, PROJECT_STATE, row_number() over
+				(order by project_date desc) as row_num from project where USER_EMAIL= #{bean.USER_EMAIL,jdbcType=VARCHAR}) 
+				where row_num>= #{start,jdbcType=INTEGER} and row_num<= #{end,jdbcType=INTEGER}
+	]]>
+	</select>	
+	
+	<insert id="insertProject" parameterType="ProjectBean">
+	    insert into project values ( 
+	    	PRO_SEQ.NEXTVAL, #{PROJECT_TITLE,jdbcType=VARCHAR}, #{PROJECT_TEAMNAME,jdbcType=VARCHAR}, 
+	    	#{USER_EMAIL,jdbcType=VARCHAR}, #{PROJECT_IMG,jdbcType=VARCHAR}, #{PROJECT_BRIEFING,jdbcType=VARCHAR},
+			#{PROJECT_CONTENT,jdbcType=VARCHAR}, #{PROJECT_GMONEY,jdbcType=INTEGER},
+	    	0, 0, 0, #{PROJECT_D_DAY,jdbcType=INTEGER}, 'unApproved', sysdate)
+	</insert>
+	
+	<!-- 
+	<select id="selectAcc" parameterType="String" resultMap="AccountMap">
+		select * from member where id = #{id}
+	</select>
+
+	
+	
+	
+	<delete id="deleteAcc" parameterType="String">
+		delete from account where id = #{id}
+	</delete>
+	
+	<update id="updateAcc" parameterType="Account">
+		update account
+			set pwd = #{pwd},
+				name = #{name}
+			where id = #{id}
+	</update> -->
+</mapper>
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 서버에 정보가 다 연결되있어서 다른 것들은 필요없음! -->
+	<typeAliases>
+		<typeAlias alias="MemberBean" type="com.heaven.dto.MemberBean"/>
+		<typeAlias alias="ProjectBean" type="com.heaven.dto.ProjectBean"/>
+		<typeAlias alias="FundBean" type="com.heaven.dto.FundBean"/>
+		<typeAlias alias="ReplyBean" type="com.heaven.dto.ReplyBean"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappers/Member.xml" />
+		<mapper resource="mappers/Project.xml" />
+		<mapper resource="mappers/Fund.xml" />
+	</mappers> 
+
+</configuration>
+

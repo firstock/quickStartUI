@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.heaven.dto.FundBean">
+
+	<resultMap type="com.heaven.dto.FundBean" id="FundMap">
+	<!-- column:table 이름 / property:dto getter,setter메서드 -->
+	<result column="FUND_NUM" property="FUND_NUM"/>
+	<result column="USER_EMAIL" property="USER_EMAIL"/>
+	<result column="PROJECT_TITLE" property="PROJECT_TITLE"/>
+	<result column="FUND_DONATION" property="FUND_DONATION"/>
+	<result column="FUND_DATE" property="FUND_DATE"/>
+	</resultMap>
+
+
+	<select id="getMyFundCount" parameterType="String" resultType="Integer">
+		select count(*) as tot from FUND where USER_EMAIL= #{user_email,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectMyFund" resultMap="FundMap" resultType="FundBean" parameterType="hashMap">
+	<!-- select * from ( select PROJECT_TITLE, FUND_DONATION, FUND_DATE, "
+				+ "row_number()  over(order by FUND_DATE desc) as row_num from FUND "
+				+ "where USER_EMAIL=?) where row_num>=? and row_num<=? -->
+	
+	
+	<![CDATA[
+		select * from (select PROJECT_TITLE, FUND_NUM, FUND_DONATION, FUND_DATE, 
+				row_number()  over(order by FUND_DATE desc) as row_num from FUND
+				 where USER_EMAIL= #{bean.USER_EMAIL,jdbcType=VARCHAR}) 
+				where row_num>= #{start,jdbcType=INTEGER} and row_num<= #{end,jdbcType=INTEGER}
+	]]>
+	</select>
+	
+</mapper>	

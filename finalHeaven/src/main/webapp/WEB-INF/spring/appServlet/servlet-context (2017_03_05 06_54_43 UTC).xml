@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<beans:bean id="multipartResolver" 
+				class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="defaultEncoding" value="UTF-8" />
+		<beans:property name="maxUploadSize" value="52428800" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.heaven" />
+	
+	<!-- Interceptors -->
+	<interceptors>
+		<interceptor>
+			<!-- 포함되는 url -->
+			<mapping path="/*.do"/>	
+			<!-- 제외하는 url -->
+			<exclude-mapping path="/main.do"/>
+			<exclude-mapping path="/overlaptest.do" /> 
+			<exclude-mapping path="/Member*.do"/>	
+			<!-- <exclude-mapping path="/MemberLoginView.do"/>	
+			<exclude-mapping path="/MemberLogout.do" /> 
+			<exclude-mapping path="/MemberChk.do" /> 
+			<exclude-mapping path="/MemberJoinView.do" /> 			
+			<exclude-mapping path="/MemberJoin.do" /> 
+			<exclude-mapping path="/MemberFindPwView.do" />  -->
+
+			<!-- by J.K -->
+			<exclude-mapping path="/ProjectListAction.do"/>	
+			<exclude-mapping path="/project_detailAction.do"/>	
+			<exclude-mapping path="/project_supporting.do"/>	
+			
+			<beans:bean class="com.heaven.etc.SessionInterceptor"></beans:bean>
+			<!-- <beans:ref bean="loginInterceptor"/>  -->
+			<!-- 인터셉터 애노테이션 이름 애노테이션으로 안했다면  
+			<beans:bean class="인터셉터 패키지 포함 풀 경로"></beans:bean>
+			-->				
+		</interceptor>
+		<interceptor>
+			<mapping path="/*.ad"/>
+			<!-- 제외url: login필요없는 페이지 -->
+			<!-- 예외에 adminLogin.ad 추가안하면 영원히 경고창만 뜸 -->
+			<exclude-mapping path="/adminLogin.ad"/>
+			<beans:bean class="com.heaven.etc.SessionInterceptorAdmin"/>
+		</interceptor>
+	</interceptors>
+
+		
+	
+</beans:beans>
+
+

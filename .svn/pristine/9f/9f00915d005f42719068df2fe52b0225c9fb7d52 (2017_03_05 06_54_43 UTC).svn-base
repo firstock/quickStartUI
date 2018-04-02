@@ -1,0 +1,12 @@
+drop table adminMember;
+create table adminMember(
+	adminName varchar2(30),
+	adminPw varchar2(30)
+); 
+
+
+select adminName from ADMINMEMBER;
+select * from ADMINMEMBER;
+
+insert into ADMINMEMBER
+	values('admi','nistrator');

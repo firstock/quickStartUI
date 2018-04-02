@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.heaven.dto.AdminMemberBean">
+	<resultMap id="AdminMemberBean" type="com.heaven.dto.AdminMemberBean">
+	  <!-- 칼럼명==빈즈 면 상관X _<id property="id" column="user_id" /> -->
+	  <result property="adminName" column="adminName"/>
+	  <result property="adminPw" column="adminPw"/>
+	</resultMap>
+	
+	<select id="selectAdminName" resultMap="AdminMemberBean">
+		select adminName from adminMember
+	</select>
+	
+	<select id="selectAdminPw" resultMap="AdminMemberBean">
+		select adminPw from adminMember
+	</select>
+</mapper>
+

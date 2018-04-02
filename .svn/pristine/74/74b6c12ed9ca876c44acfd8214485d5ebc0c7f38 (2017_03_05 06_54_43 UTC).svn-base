@@ -1,0 +1,75 @@
+package com.heaven.dao;
+
+import java.util.HashMap;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.heaven.dto.MemberBean;
+
+
+@Repository
+public class MemberDaoImpl implements MemberDao{
+	private final static int NOT_EXIST_ID=1;
+	private final static int WRONG_PW=2;
+	private final static int LOGIN_SUCCESS=3;
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	public int memberChk(String email, String inputPw) {
+		String dbPw = (String) sqlSession.selectOne("selectPw", email);
+		System.out.println("dbPw="+dbPw);
+		if(dbPw==null) {
+			System.out.println("존재하지 않는 아이디입니다.");
+			return NOT_EXIST_ID;
+		} else if(!inputPw.equals(dbPw)) {
+			System.out.println("비번이 틀림");
+			return WRONG_PW;
+		} 
+		
+		return LOGIN_SUCCESS;		
+	}
+
+	@Override
+	public String overlapTest(String u_email) {
+		String count_email = (String)sqlSession.selectOne("overlapEmail", u_email);		
+		return count_email;
+	}
+
+	@Override
+	public void join(MemberBean bean) {
+		sqlSession.insert("join",bean);	
+	}
+
+	@Override
+	public String getPw(String email) {
+		String dbPw = (String) sqlSession.selectOne("selectPw", email);
+		System.out.println("dbPw="+dbPw);
+		return dbPw;
+	}
+
+	@Override
+	public int getMyAccount(String email) {
+		return sqlSession.selectOne("selectAccount", email);
+	}
+
+	@Override
+	public void updateMyAccount(HashMap<String, Object> params) {
+		int curMoney=getMyAccount((String)params.get("email"));
+		//int addMoney=(int)params.get("money");
+		int addMoney=(Integer)params.get("money");
+		params.put("money",curMoney+addMoney);
+		sqlSession.update("udpateAccount", params);
+	}
+	
+	//by J.K.
+	public void minusMyAccount(HashMap<String, Object> minusFundMap) {
+		int curMoney = getMyAccount((String)minusFundMap.get("email"));
+		//int minusMoney = (int)minusFundMap.get("money");
+		int minusMoney = (Integer)minusFundMap.get("money");
+		minusFundMap.put("money", curMoney-minusMoney);
+		sqlSession.update("udpateAccount",minusFundMap);
+	}
+}

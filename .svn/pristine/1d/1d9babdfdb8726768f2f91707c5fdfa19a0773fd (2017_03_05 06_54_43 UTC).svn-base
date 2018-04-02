@@ -1,0 +1,43 @@
+package com.heaven.dao;
+
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.heaven.dto.ProjectBean;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ;
+
+@Repository
+public class ProjectDaoImpl implements ProjectDao{
+	@Autowired
+	private SqlSessionTemplate sqlSession;
+	
+	public List<ProjectBean> getProjectList() {
+		System.out.println("project dao 진입");
+		return sqlSession.selectList("selectProjectAll");
+	}
+
+	@Override
+	public void addProject(ProjectBean dto) {
+		System.out.println("projectDaoImpl-addProject메서드진입");
+		sqlSession.insert("insertProject", dto);
+	}
+	
+	@Override
+	public int getProCount(String email) {		
+		return sqlSession.selectOne("getListCount", email);
+	}
+	
+	@Override
+	public List<ProjectBean> getMyProject(HashMap<String, Object> params) {
+		List<ProjectBean> prolist = sqlSession.selectList("selectMyProject", params);
+		return prolist;
+	}
+
+	
+}

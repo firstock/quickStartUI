@@ -1,0 +1,8 @@
+@CHARSET "UTF-8";
+* { font-weight:bold; }
+table { width:25%;}
+td { padding:10px; }
+input[type="email"],input[type="password"] { height:30px; color:gray; }
+input[type="button"] { background:none; border:0px;  color:#FE5993; font-size:15px;}
+#submit { width:100%; height:40px; color:white; border:0px; border-radius: 2px; 
+		background-color:#FE5993; font-size:17px;}
